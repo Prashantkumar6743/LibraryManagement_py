@@ -4,7 +4,8 @@ import time
 import datetime
 from prettytable import PrettyTable
 
-# Database Connection
+
+# for database connection
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -13,7 +14,7 @@ mydb = mysql.connector.connect(
 )
 mycursor = mydb.cursor()
 
-# Create Database & Tables
+# creating database & tables
 mycursor.execute("CREATE DATABASE IF NOT EXISTS library")
 mycursor.execute("USE library")
 mycursor.execute("""
@@ -42,20 +43,21 @@ mycursor.execute("""
 """)
 mydb.commit()
 
-# Default Admin User
+# default admin user
 mycursor.execute("SELECT * FROM login")
 if mycursor.fetchone() is None:
     default_password = hashlib.sha256("pass".encode()).hexdigest()
     mycursor.execute("INSERT INTO login (user, password) VALUES (%s, %s)", ("admin", default_password))
     mydb.commit()
 
-# Utility: Show Loading Effect
+
+# for loading effect
 def loading(text="Processing"):
     for _ in range(3):
         print(f"{text}...", end="\r")
         time.sleep(0.5)
 
-# Utility: Show Table Output
+# for showing table output
 def display_table(data, headers):
     table = PrettyTable()
     table.field_names = headers
@@ -63,7 +65,7 @@ def display_table(data, headers):
         table.add_row(row)
     print(table)
 
-# Function: Add a Book
+# for adding a book
 def addbook():
     print("\nAdd a New Book")
     idd = int(input("Enter Book ID: "))
@@ -79,7 +81,7 @@ def addbook():
     print("Book Added Successfully!")
     main()
 
-# Function: Issue a Book
+#  for issue a book
 def issued():
     print("\nIssue a Book")
     idd = int(input("Enter Book ID: "))
@@ -105,7 +107,7 @@ def issued():
     
     main()
 
-# Function: Return a Book
+# for book return
 def submit():
     print("\nReturn a Book")
     idd = int(input("Enter Book ID: "))
@@ -127,8 +129,8 @@ def submit():
 
     main()
 
-# Function: View Issued Books
-def qoc():
+# display issued books
+def display_issued():
     print("\nIssued Books List")
     mycursor.execute("SELECT * FROM issued")
     data = mycursor.fetchall()
@@ -140,7 +142,7 @@ def qoc():
 
     main()
 
-# Function: Remove a Book
+# for removing a book
 def remove():
     print("\nRemove a Book")
     idd = int(input("Enter Book ID to Remove: "))
@@ -157,7 +159,7 @@ def remove():
     
     main()
 
-# Function: Display Available Books
+# for display available books
 def display():
     print("\nAvailable Books List")
     mycursor.execute("SELECT * FROM available_books")
@@ -170,6 +172,7 @@ def display():
 
     main()
     
+# for searching a book
 def search_books():
     print("\n🔍 Search for a Book by Name")
     book_name = input("Enter Book Name: ")
@@ -194,7 +197,7 @@ def search_books():
     mydb.close()
     main()
 
-# Main Menu
+# main function
 def main():
     print("\n---------------LIBRARY MANAGEMENT SYSTEM---------------")
     print("Select Tasks")
@@ -213,7 +216,7 @@ def main():
     elif choice == '5':
         display()
     elif choice == '6':
-        qoc()
+        display_issued()
     elif choice == '7':
         search_books()
     elif choice == '8':
@@ -222,7 +225,7 @@ def main():
         print("Invalid Choice! Try Again.")
         main()
 
-# Login System
+# for login
 while True:
     print("----------------WELCOME TO THE LIBRARY MANAGEMENT SYSTEM-----------------------")
     print("\n1. Login\n2. Exit")
